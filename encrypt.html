@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello</title>
+</head>
+<body>
+    <h1>Encrypt vCard infomation</h1>
+    <h1>This should be able to completely run offline and absolute not store or send any infomation to anywhere, just to ensure you should turn off internet </h1>
+    <fieldset id="fill_field">
+        <div>
+          <label for="fileF"><u>Click Here</u> to upload image (should smaler than 100kbs for convernear)</label>
+          <input type="file" id="fileF" hidden /><br />
+          <img width="100" alt="Image preview" id="previewF" />
+        </div>
+        <button id="encodeF">Encode</button>
+      </fieldset>
+      <div>Result</div>
+      <textarea id="result" rows="10" cols="30"></textarea>
+      <button id="clearData">CLEAR DATA</button>
+
+    <script src="libs/scrypt.js" type="text/javascript"></script>
+    <script src="libs/buffer.js" type="text/javascript"></script>
+    <script src="libs/setImmediate.js" type="text/javascript"></script>
+    <script src="libs/aes-js.js" type="text/javascript"></script>
+
+    <script>
+        "use strict";
+        const info = [
+            "telegram",
+            "facebook",
+            "whatsapp",
+            "instagram",
+            "twitter",
+            "linkedin",
+            "github",
+            "youtube",
+            "tiktok",
+            "snapchat",
+            "pinterest",
+            "tumblr",
+            "reddit",
+            "discord",
+            "skype",
+            "line",
+            "wechat",
+            "viber",
+            "signal",
+            "zoom",
+            "org",
+            "title",
+            "email",
+            "phone",
+            "website",
+            "birthday",
+            "address",
+            "nickname",
+            "cardInfo",
+            "info",
+            "name",
+            "password",
+        ]
+
+        //render lable and input field
+        const fill_field = info.map((field) => {
+            const div = document.createElement("div");
+            const label = document.createElement("label");
+            label.setAttribute("for", field + "F");
+            label.textContent = field;
+            let input = null;
+            if (field === "cardInfo") {
+                input = document.createElement("textarea");
+                input.setAttribute("rows", "5");
+                input.setAttribute("cols", "30");
+            } else {
+                input = document.createElement("input");
+            }
+
+            if (field === "birthday") {
+                input.setAttribute("type", "date");
+            }
+
+            input.setAttribute("id", field + "F");
+
+            div.appendChild(label);
+            div.appendChild(input);
+            document.getElementById("fill_field").insertBefore(div, document.getElementById("fill_field").firstChild);
+            return input;
+        });
+        
+        const fake_info = {
+            "password": "TKf2GB1aG",
+            "name": "John Doe",
+            "info": "Doe;John;Mr;",
+            "nickname": "JD",
+            "birthday": "2000-01-01",
+            "cardInfo": "Two giants live in Britain's land\n John Doe and Richard Roe, \n Who always travel hand in hand, \n John Doe and Richard Roe.",
+            "org": "Company",
+            "title": "Engineer",
+            "email": "example@e.com",
+            "phone": "0123456789",
+            "address": "HoChiMinh, Vietnam",
+            "website": "https://example.com",
+            "telegram": "https://t.me/username",
+            "facebook": "https://facebook.com/username",
+            "whatsapp": "https://wa.me/0123456789",
+            "instagram": "https://instagram.com/username",
+            "twitter": "https://twitter.com/username",
+            "linkedin": "https://linkedin.com/in/username",
+            "github": "https://git.com/username",
+            "youtube": "https://youtube.com/channel/username",
+            "tiktok": "https://tiktok.com/@username",
+            "snapchat": "https://snapchat.com/add/username",
+            "pinterest": "https://pinterest.com/username",
+            "tumblr": "https://tumblr.com/username",
+            "reddit": "https://reddit.com/user/username",
+            "discord": "https://discord.com/username",
+            "skype": "https://skype.com/username",
+            "line": "https://line.me/ti/p/username",
+            "wechat": "https://wechat.com/username",
+            "viber": "https://viber.com/username",
+            "signal": "https://signal.com/username",
+            "zoom": "https://zoom.com/username",
+        }
+        //fill fake_info to input field
+        for (const key in fake_info) {
+            if (Object.hasOwnProperty.call(fake_info, key)) {
+                const element = fake_info[key];
+                console.log(key, element);
+                document.getElementById(key + "F").value = element;
+            }
+        }
+
+
+        function previewFile(event) {
+            let reader = new FileReader();
+            let file = event.target.files[0];
+
+            reader.readAsDataURL(file);
+            reader.onloadend = () => (previewF.src = reader.result);
+        }
+        fileF.addEventListener('change', previewFile);
+        document.getElementById("clearData").addEventListener('click', function() {
+            fill_field.forEach((field) => {
+                field.value = "";
+            });
+            previewF.src = "";
+            result.value = "";
+        });
+        encodeF.addEventListener('click', function() {
+            
+            let json_target = {};
+            
+            fill_field.forEach((field) => {
+                if (field.value !== "") {
+                    let new_key = field.id.replace("F", "");
+                    json_target[new_key] = field.value;
+                }
+            });
+
+            //correnct the date format to (YYYY-MM-DD)
+            if (json_target.birthday) {
+                let date = new Date(json_target.birthday);
+                let year = date.getFullYear();
+                let month = date.getMonth() + 1;
+                let dt = date.getDate();
+
+                if (dt < 10) {
+                    dt = '0' + dt;
+                }
+                if (month < 10) {
+                    month = '0' + month;
+                }
+                json_target.birthday = year + '-' + month + '-' + dt;
+            }
+            //add image to json
+            json_target.image = previewF.src;
+
+            let your_password = json_target['password'];
+            console.log("Your password: ", your_password, );
+            //remove password from json TKf2GB1aG
+            delete json_target.password;
+
+            if (!your_password.match(/^[A-Za-z0-9]+$/) || your_password.length < 8){
+                console.log("Password should contain at least 8 characters, including at least 1 number, 1 letter");
+                result.value = "Password should contain at least 8 characters, including at least 1 number, 1 uppercase letter, and 1 lowercase letter.";
+            }else{
+                const password = new buffer.SlowBuffer(your_password.toLocaleLowerCase().normalize('NFKC'));
+                const salt = new buffer.SlowBuffer("someSalt".normalize('NFKC'));
+
+                //N for CPU calculate 
+                
+                const N = 16384, r = 8, p = 2;
+                const dkLen = 32;
+
+                console.log("Password is valid.");
+                result.value = "Encrypting..."
+                //generate key
+                const start = new Date();
+                const key = scrypt.syncScrypt(password, salt, N, r, p, dkLen);
+                const end = new Date();
+                console.log("Time: ", end - start, "ms");
+                console.log("Derived Key (sync): ", key);
+
+                //encrypt
+                let text = JSON.stringify(json_target);
+                let textBytes = aesjs.utils.utf8.toBytes(text);
+                var aesCtr = new aesjs.ModeOfOperation.ctr(key, new aesjs.Counter(5));
+                let encryptedBytes = aesCtr.encrypt(textBytes);
+
+                let encryptedHex = aesjs.utils.hex.fromBytes(encryptedBytes);
+                console.log("Encrypted: ", encryptedHex);
+
+                //attempt decrypt
+                encryptedBytes = aesjs.utils.hex.toBytes(encryptedHex);
+                aesCtr = new aesjs.ModeOfOperation.ctr(key, new aesjs.Counter(5));
+                let decryptedBytes = aesCtr.decrypt(encryptedBytes);
+                let decryptedText = aesjs.utils.utf8.fromBytes(decryptedBytes);
+                console.log("Decrypted: ", decryptedText);
+                console.log("Decrypted Json: ", JSON.parse(decryptedText));
+
+                result.value = encryptedHex;
+            }
+        });
+
+</script>
+
+</body>
+</html>

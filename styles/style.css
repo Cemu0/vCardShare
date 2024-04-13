@@ -1,0 +1,150 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: black;
+}
+
+/* center svg */
+svg {
+    top: 30%;
+    /* left: 50%;  */
+    /* transform: translate(50%, 50%); */
+}
+
+.svg-container {
+    width: 100%;
+    max-width: 500px;
+    height: 100%;
+}
+
+.svg-content-responsive {
+    display: inline-block;
+    position: absolute;
+    left: 0;
+}
+
+
+h3 {
+    color: white;
+    text-align: center;
+}
+
+#percentage_load {
+    color: white;
+    position: relative;
+    top: 50%;
+    text-align: center;
+}
+#nicknameF {
+    font-size: 0.8em;
+    /* italic */
+    font-style: italic;
+}
+
+#titleF {
+    font-size: 0.8em;
+}
+
+#cardInfoF {
+    font-size: 0.9em;
+    margin-bottom: 10px;
+}
+#orgF {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+
+.center {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.loading {
+    mix-blend-mode: difference;
+}
+
+#top_banner {
+    position: absolute;
+    top: 7%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2.3em;
+    animation: fadeIn 3s;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.card {
+    top: 70px;
+    width: 60%;
+    transition: transform 3s ease-in-out;
+    margin: auto;
+    background: rgba(50, 0, 255, 0.52);
+    border-radius: 10px;
+    min-width: 300px;
+    max-width: 400px;
+}
+
+.card-body {
+    background-color: rgba(19, 19, 97, 0.63);
+    top: -30px;
+    position: relative;
+}
+
+.profile-pic {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin: auto;
+    padding: 20px;
+    z-index: 1;
+}
+
+@keyframes zoomFadeIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.zoom-fade-in {
+    animation: zoomFadeIn 1s forwards;
+    display: none;
+}
+
+bottom {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    text-align: center;
+}
+
+.socialmedia {
+    width: 115px;
+}
+
+.contact-card {
+    padding-bottom: 300px;
+    display: none;
+}
+
+.icon-right {
+    display: flex;
+}
