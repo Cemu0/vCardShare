@@ -62,8 +62,11 @@
     <script src="./libs/decrypt.js" type="text/javascript"></script>
     <script src="./libs/generateVcard.js" type="text/javascript"></script>
     <script src="./data.js" type="text/javascript"></script>
+    <script src="libs/d3.v4.min.js"></script>
+    <script src="libs/myanimate.js"></script>
     <script>
         "use strict";
+
 
         const icons_normal = {
             address: "bi bi-house-door",
@@ -98,13 +101,14 @@
             zoom: "bi bi-zoom",
         };
         let loaded = false;
+        let info = {}
         let start_load = Date.now();
-        //fake load to 100% in 3s
+        //fake load to 100%
         var percentage = 0;
         var interval = setInterval(() => {
             let random = Math.floor(Math.random() * 1.25); // :))))
             if (start_load + 3000 < Date.now() && loaded) {
-                random = Math.floor(Math.random() * 10);
+                random = Math.floor(Math.random() * 4);
             }
             percentage += random;
             document.getElementById("percentage_load").innerHTML = percentage + "%";
@@ -117,47 +121,57 @@
                     //animate top banner
                     document.getElementById("top_banner").innerHTML = "Oh no!";
                 } else {
+                    
                     document.getElementById("percentage_load").innerHTML = "";
-
-                    document.getElementById("nameF").innerHTML = info.name;
-                    document.getElementById("cardInfoF").innerHTML = info.cardInfo;
-                    document.getElementById("nicknameF").innerHTML = info.nickname;
-                    document.getElementById("titleF").innerHTML = info.title;
-                    document.getElementById("orgF").innerHTML = info.org;
-
-
-                    const contact_basic_infos = document.getElementById(
-                        "contact_basic_infos"
-                    );
-                    for (const [key, value] of Object.entries(info)) {
-                        if (icons_normal[key]) {
-                            //alight icon to one side
-                            contact_basic_infos.innerHTML += `<p class="icon-right"><i class="${icons_normal[key]}"></i> <span class='pl-4'>${value}</span></p>`;
-                        }
-                    }
-
-                    //show social
-                    const contact_infos = document.getElementById("contact_social");
-                    for (const [key, value] of Object.entries(info)) {
-                        if (icons_social[key]) {
-                            contact_infos.innerHTML += `<a href="${value}" class="socialmedia btn btn-outline-primary text-light m-1"><i class="${icons_social[key]
-                                }"></i> ${capitalize(key)}</a>`;
-                        }
-                    }
-
                     document.getElementById("contact_card").style.display = "block";
 
-                    profile_image.src = info.image;
                     document.getElementById("top_banner").innerHTML = "";
                 }
             }
         }, 50);
 
-        let info = decryptData(encryptedHex);
+    
+        //to remove the pass on url, use decryptData(encryptedHex, true);
+        async function load(){
+            info = await decryptData(encryptedHex); 
+            
+            if (!info.hasOwnProperty("error")) {
+                loaded = true;
+                
 
-        if (!info.hasOwnProperty("error")) {
-            loaded = true;
+                document.getElementById("nameF").innerHTML = info.name;
+                document.getElementById("cardInfoF").innerHTML = info.cardInfo;
+                document.getElementById("nicknameF").innerHTML = info.nickname;
+                document.getElementById("titleF").innerHTML = info.title;
+                document.getElementById("orgF").innerHTML = info.org;
+
+
+                const contact_basic_infos = document.getElementById(
+                    "contact_basic_infos"
+                );
+                for (const [key, value] of Object.entries(info)) {
+                    if (icons_normal[key]) {
+                        //alight icon to one side
+                        contact_basic_infos.innerHTML += `<p class="icon-right"><i class="${icons_normal[key]}"></i> <span class='pl-4'>${value}</span></p>`;
+                    }
+                }
+
+                //show social
+                const contact_infos = document.getElementById("contact_social");
+                for (const [key, value] of Object.entries(info)) {
+                    if (icons_social[key]) {
+                        contact_infos.innerHTML += `<a href="${value}" class="socialmedia btn btn-outline-primary text-light m-1"><i class="${icons_social[key]
+                            }"></i> ${capitalize(key)}</a>`;
+                    }
+                }
+                profile_image.src = info.image;
+            }
         }
+        
+        setTimeout(function(){
+            // this function is heavy so ... the page gonna frozen for a while 
+            load();
+        }, 10);
 
         function capitalize(s) {
             return s[0].toUpperCase() + s.slice(1);
@@ -168,9 +182,8 @@
         });
     </script>
 
-    <script src="libs/d3.v4.min.js"></script>
 
-    <script src="libs/myanimate.js"></script>
+
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
         crossorigin="anonymous"></script>

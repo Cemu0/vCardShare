@@ -1,13 +1,39 @@
+function isIOS() {
+    return [
+        'iPad Simulator',
+        'iPhone Simulator',
+        'iPod Simulator',
+        'iPad',
+        'iPhone',
+        'iPod'
+    ].includes(navigator.platform)
+    // iPad on iOS 13 detection
+    || (navigator.userAgent.includes("Mac") && "ontouchend" in document)
+      
+}
+function isRunningStandalone() {
+    if(isIOS()){
+        return (window.navigator.standalone === true);
+    }
+    return (window.matchMedia('(display-mode: standalone)').matches);
+}
 //https://dev.to/walternascimentobarroso/make-vcard-with-js-2afl
 function downloadToFile(content, filename, contentType) {
-    const a = document.createElement("a");
-    const file = new Blob([content], { type: contentType });
-
-    a.href = URL.createObjectURL(file);
-    a.download = filename;
-    a.click();
-
-    URL.revokeObjectURL(a.href);
+    //check if the webpage is being viewed in a webview (like an app's built-in browser) 
+    if (!isRunningStandalone()) {
+        const a = document.createElement("a");
+        const file = new Blob([content], { type: contentType });
+        if(isIOS()){
+            alert('Scroll down at the end of card to save my contact information.');
+        }
+        a.href = URL.createObjectURL(file);
+        a.download = filename;
+        a.click();
+        URL.revokeObjectURL(a.href);
+    }else{
+        alert('Please open this page in a regular web browser to download the file.');
+    }
+        
 }
 function makeVCard(info) {
     let vcard = `BEGIN:VCARD\n`;

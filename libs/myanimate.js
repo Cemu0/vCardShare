@@ -1,3 +1,4 @@
+
 // Description: This is a simple animation that creates a wave effect using d3.js
 var svg = 
   d3.select("svg")
@@ -24,7 +25,7 @@ var phaseShift = function(t, i) {
     // return t / 1000;
 }
 //source https://gist.github.com/tarekrached/5f8c50c370c67d63abd76aa69e19f162  @tarekrached
-
+var n = 0;
 var path = svg.append("g")
     .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
     .attr("fill", "none")
@@ -42,7 +43,9 @@ var path = svg.append("g")
           .radius(function(a) {
             random = Math.random();
             // var t = d3.now() / 1000;
-            var t = phaseShift(d3.now(), i);
+            var t = phaseShift(n/100, i);
+            // if (d3.now() / 10 < 2)
+            n++;
             return sizeWH + waveFunction(a, t, i) * lineW;
           });
     });

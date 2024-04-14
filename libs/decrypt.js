@@ -1,5 +1,5 @@
-function decryptData(encryptedHex) {
-      
+async function decryptData(encryptedHex, remove_key = false) {
+
       //get the pass from the pass key in url
       var url = new URL(window.location.href);
       var pass = url.searchParams.get("pass");
@@ -7,7 +7,9 @@ function decryptData(encryptedHex) {
         const password = new buffer.SlowBuffer(pass.toLocaleLowerCase().normalize("NFKC"));
         const salt = new buffer.SlowBuffer("someSalt".normalize("NFKC"));
         //c;ear the pass from the url
-        // window.history.replaceState({}, document.title, "/" + "show.html");
+        if(remove_key){
+          window.history.replaceState({}, document.title, "/" + "show.html");
+        }
         //8192: ~1s
         //16384: ~2s
         const N = 16384, r = 8, p = 2;

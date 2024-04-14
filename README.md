@@ -24,6 +24,8 @@ Curious about how it works? Here's the process:
 
 For those who want an extra layer of security, check out this [guide](https://github.com/ricmoo/scrypt-js?tab=readme-ov-file#tuning) on tuning `scrypt`.
 
+To remove the pass, you can set 
+
 ## Acknowledgements
 
 This project wouldn't be possible without these fantastic libraries:
