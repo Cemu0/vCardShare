@@ -24,7 +24,7 @@ Curious about how it works? Here's the process:
 
 For those who want an extra layer of security, check out this [guide](https://github.com/ricmoo/scrypt-js?tab=readme-ov-file#tuning) on tuning `scrypt`.
 
-To remove the pass, you can set 
+To remove the pass, you can set the `decryptData(encryptedHex);` to `decryptData(encryptedHex, true);` in `index.html`
 
 ## Acknowledgements
 

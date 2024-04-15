@@ -64,6 +64,7 @@
             <div class="row">
                 <div class="col">
                     <p>
+                        <div id="debug"></div>
                         Made with ♡ by <a href="https://github.com/Cemu0">Cemu0</a> ·
                         <a href="https://github.com/Cemu0/vCardShare">How it work?</a>
                     </p>
@@ -195,14 +196,22 @@
         }
 
         saveContact.addEventListener("click", function () {
-            if(!makeVCard(info)){
-                document.getElementById("alert-cover").style.display = "block";
+            let messsage = "Open the saved card to save the contact information."
+            if(isIOS()){
+                messsage = "Scroll down at the end of card to save my contact information."
             }
+            isRunningStandalone(messsage, function(result) {
+                makeVCard(info);
+            }, function() {
+                document.getElementById("alert-cover").style.display = "block";
+            });
         });
+
         document.getElementById("alert-cover").addEventListener("click", function () {
             document.getElementById("alert-cover").style.display = "none";
         });
     </script>
+
 
 
 

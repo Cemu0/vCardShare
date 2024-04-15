@@ -11,30 +11,32 @@ function isIOS() {
     || (navigator.userAgent.includes("Mac") && "ontouchend" in document)
       
 }
-function isRunningStandalone() {
-    if(isIOS()){
-        return (window.navigator.standalone === true);
-    }
-    return (window.matchMedia('(display-mode: standalone)').matches);
+function isRunningStandalone(message, success, failure){
+        var open_time = new Date();
+        var result = alert(message);
+        var close_time = new Date();
+    
+        if (close_time - open_time < 10) {
+            failure();
+        } else {
+            success();
+        }
+    
+    // if(isIOS()){
+    //     return (window.navigator.standalone);
+    // }
+    // return (window.matchMedia('(display-mode: standalone)').matches);
 }
 //https://dev.to/walternascimentobarroso/make-vcard-with-js-2afl
 function downloadToFile(content, filename, contentType) {
     //check if the webpage is being viewed in a webview (like an app's built-in browser) 
-    if (!isRunningStandalone()) {
-        const a = document.createElement("a");
-        const file = new Blob([content], { type: contentType });
-        if(isIOS()){
-            alert('Scroll down at the end of card to save my contact information.');
-        }
-        a.href = URL.createObjectURL(file);
-        a.download = filename;
-        a.click();
-        URL.revokeObjectURL(a.href);
-        return true;
-    }else{
-        return false;
-    }
-        
+    const a = document.createElement("a");
+    const file = new Blob([content], { type: contentType });
+    
+    a.href = URL.createObjectURL(file);
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(a.href);
 }
 function makeVCard(info) {
     let vcard = `BEGIN:VCARD\n`;
@@ -57,5 +59,5 @@ function makeVCard(info) {
     vcard += `PHOTO;ENCODING=b;TYPE=JPEG:${String(profile_image.src).replace("data:image/png;base64,","")}\n`;
     vcard += `REV:${new Date().toISOString()}\n`;
     vcard += `END:VCARD`;
-    return downloadToFile(vcard, `vcard-${name}.vcf`, "text/vcard");
+    downloadToFile(vcard, `vcard-${name}.vcf`, "text/vcard");
 }
