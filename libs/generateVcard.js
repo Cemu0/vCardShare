@@ -16,7 +16,7 @@ function isRunningStandalone(message, success, failure){
         var result = alert(message);
         var close_time = new Date();
     
-        if (close_time - open_time < 100) {
+        if (close_time - open_time < 10) {
             failure();
         } else {
             success();
