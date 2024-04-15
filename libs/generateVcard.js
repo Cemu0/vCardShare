@@ -30,8 +30,9 @@ function downloadToFile(content, filename, contentType) {
         a.download = filename;
         a.click();
         URL.revokeObjectURL(a.href);
+        return true;
     }else{
-        alert('Please open this page in a regular web browser to download the file.');
+        return false;
     }
         
 }
@@ -56,5 +57,5 @@ function makeVCard(info) {
     vcard += `PHOTO;ENCODING=b;TYPE=JPEG:${String(profile_image.src).replace("data:image/png;base64,","")}\n`;
     vcard += `REV:${new Date().toISOString()}\n`;
     vcard += `END:VCARD`;
-    downloadToFile(vcard, `vcard-${name}.vcf`, "text/vcard");
+    return downloadToFile(vcard, `vcard-${name}.vcf`, "text/vcard");
 }

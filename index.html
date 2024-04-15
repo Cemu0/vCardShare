@@ -24,6 +24,23 @@
         </div>
         <h3 id="top_banner">decrypting data</h3>
     </div>
+    <!-- Flexbox container for aligning the toasts -->
+    <div id="alert-cover">
+        <div aria-live="polite" aria-atomic="true" id="alert-noti">
+                <!-- Then put toasts within -->
+                <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-header">
+                        <strong class="mr-auto">Sorry!</strong>
+                        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="toast-body">
+                        Please open this page in a regular web browser to download the file.
+                    </div>
+                </div>
+        </div>
+    </div>
 
     <div id="contact_card" class="contact-card container zoom-fade-in">
         <div class="card text-center">
@@ -178,7 +195,12 @@
         }
 
         saveContact.addEventListener("click", function () {
-            makeVCard(info);
+            if(!makeVCard(info)){
+                document.getElementById("alert-cover").style.display = "block";
+            }
+        });
+        document.getElementById("alert-cover").addEventListener("click", function () {
+            document.getElementById("alert-cover").style.display = "none";
         });
     </script>
 
