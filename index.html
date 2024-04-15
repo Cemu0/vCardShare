@@ -83,9 +83,7 @@
     <script src="libs/d3.v4.min.js"></script>
     <script src="libs/myanimate.js"></script>
     <script>
-        "use strict";
-
-
+        
         const icons_normal = {
             address: "bi bi-house-door",
             phone: "bi bi-telephone",
@@ -211,6 +209,12 @@
         document.getElementById("alert-cover").addEventListener("click", function () {
             document.getElementById("alert-cover").style.display = "none";
         });
+        
+        //FB JS is dump 
+        var isFacebookApp = /(FB_IAB|FBAV)/i.test(navigator.userAgent);
+        if(!isFacebookApp){
+            document.getElementById("alert-cover").style.display = "none";
+        }
     </script>
 
 
